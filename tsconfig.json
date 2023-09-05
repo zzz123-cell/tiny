@@ -1,0 +1,8 @@
+{
+  "extends": "./node_modules/@beisen/ts/tsconfig",
+  "compilerOptions": {
+    "rootDir": "./src"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/components/*/examples"]
+}

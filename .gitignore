@@ -1,0 +1,38 @@
+npm-debug.log
+node_modules/
+.idea/
+
+# some local files
+*/.settings/
+*/.DS_Store
+.DS_Store
+*/.idea/
+.vscode/
+gradlew
+gradlew.bat
+unused.txt
+props-loader.ts
+
+# Log Files
+*.log
+
+# Lines that start with '#' are comments.
+# IntelliJ IDEA Project files
+.idea
+*.iml
+*.ipr
+*.iws
+
+*.bak
+*.tem
+*.temp
+#.swp
+*.*~
+~*.*
+
+/dist
+
+lib/
+
+cjs/
+.proxyConfig.js

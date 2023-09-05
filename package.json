@@ -1,0 +1,54 @@
+{
+    "name": "@beisen/tiny",
+    "version": "1.0.0",
+    "description": "小工具集合",
+    "main": "lib/index.js",
+    "sideEffects": [
+        "*.css",
+        "*.scss",
+        "*.less"
+    ],
+    "scripts": {
+        "tsc": "pnpm exec tsc --noEmit",
+        "proxy": "pnpm exec italent-thunder start -o ${port=3001} --proxyVersion=${version=1.0.0} --disable-https={true}",
+        "build-prod": "pnpm exec italent-thunder build prod",
+        "lib": "pnpm exec stl build lib",
+        "example": "pnpm exec sbl start --port 9001",
+        "prepublish": "pnpm run lib",
+        "analysis": "analysis=on pnpm exec italent-thunder build prod",
+        "prepare": "husky install"
+    },
+    "license": "ISC",
+    "repository": {
+        "type": "git",
+        "url": "git@gitlab.beisencorp.com:ux-share-platform/beisen-tiny.git"
+    },
+    "devDependencies": {
+        "postcss": "8.4.18",
+        "postcss-css-variables": "0.18.0",
+        "postcss-flexbugs-fixes": "5.0.2",
+        "postcss-loader": "4.3.0",
+        "autoprefixer": "10.4.12",
+        "@beisen/ts": "2.0.6",
+        "@beisen/build": "2.0.35",
+        "@beisen/babel": "7.0.30",
+        "@beisen/storybook": "1.1.4-alpha.1",
+        "@beisen/storybook-react": "4.x.x",
+        "@beisen/italent-thunder": "2.0.29",
+        "@beisen-phoenix/demo-container": "^5.1.4",
+        "husky": "^8.0.0",
+        "typescript": "^4.4.2",
+        "react": "16.x.x",
+        "react-dom": "16.x.x",
+        "@types/react": "17.x.x",
+        "@types/react-dom": "17.x.x"
+    },
+    "dependencies": {
+        "@beisen/vm": "1.0.4"
+    },
+    "scene": "NPM",
+    "peerDependencies": {
+        "react": "16.x.x",
+        "react-dom": "16.x.x"
+    }
+}
