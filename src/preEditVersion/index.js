@@ -17,4 +17,4 @@ a.stdout.on('data', data => {
    }
 })
 
-const a = spawn('git', ['checkout master']);
+const b= spawn('git', ['checkout master']);
