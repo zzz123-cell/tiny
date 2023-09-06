@@ -7,5 +7,14 @@
 
 const spawn = require("cross-spawn")
 function getLatest() {
-    spawn('git', ['fetch'], { stdio: 'inherit' } );
+    spawn('git', ['fetch origin'], { stdio: 'inherit' } );
 }
+
+
+const a = spawn('git', ['rev-parse', '--short', 'HEAD']);
+a.stdout.on('data', data => {
+    if (data.toString().trim() === 'e033f4e') {
+   }
+})
+
+const a = spawn('git', ['checkout master']);
