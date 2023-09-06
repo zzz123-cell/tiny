@@ -23,6 +23,9 @@
         "type": "git",
         "url": "git@gitlab.beisencorp.com:ux-share-platform/beisen-tiny.git"
     },
+    "bin": {
+        "tiny": "bin/index.js"
+    },
     "devDependencies": {
         "postcss": "8.4.18",
         "postcss-css-variables": "0.18.0",
@@ -44,7 +47,12 @@
         "@types/react-dom": "17.x.x"
     },
     "dependencies": {
-        "@beisen/vm": "1.0.4"
+        "@beisen/vm": "1.0.4",
+        "art-template": "^4.13.2",
+        "cac": "^6.7.14",
+        "commander": "^11.0.0",
+        "cross-spawn": "^7.0.3",
+        "inquirer": "^8.2.6"
     },
     "scene": "NPM",
     "peerDependencies": {
