@@ -17,4 +17,4 @@ a.stdout.on('data', data => {
    }
 })
 
-const b= spawn('git', ['checkout master']);
+spawn('git', ['checkout master'],{ stdio: 'inherit' } );
