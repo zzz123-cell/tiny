@@ -118,7 +118,7 @@ class EditVerion {
         return pck.version
     }
     async wirtePackageVersion(newVersion) {
-        const pck = this.readPackage()
+        const pck = await this.readPackage()
         pck[version] = newVersion;
         await fs.writeFileSync(packagePath, JSON.stringify(pck, null, 2))
     }
