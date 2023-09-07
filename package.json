@@ -9,6 +9,7 @@
     "*.less"
   ],
   "scripts": {
+    "build": "nnode ./gulpfile.js",
     "build-prod": "nnode ./gulpfile.js"
   },
   "license": "ISC",
