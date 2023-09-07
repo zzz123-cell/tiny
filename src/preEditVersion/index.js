@@ -35,20 +35,26 @@ class EditVerion {
  
     async stdIn() {
         const masterVersion = await this.gettMasterVersion()
+        const currentVersoin = this.getCurrentVerson()
+        const largeVersion = diffVersion(masterVersion, currentVersoin)
+        const newVersion = increaseVerson(largeVersion)
+
+
         const answers = await  inquirer.prompt([
             {
               type: 'input',
-              name: 'newVersion',
-              message: `当前Master最新的版本为(${masterVersion})`,
-              default: `${masterVersion}`,      
+              name: 'version',
+              message: `当前最新的版本为(${largeVersion})`,
+              default: `${newVersion}`,      
             }
         ])
-        const isValidate = this.checkVersion(answers.newVersion)
+        const isValidate = this.checkVersion(answers.version)
         if (!isValidate) {
             this.stdIn()
             return  
         }
-        this.editVerion(answers.newVersion)
+        
+        this.editVerion(answers.version)
 
     }
     diffVersion(masterVersion,currentVersoin) {
@@ -60,8 +66,14 @@ class EditVerion {
         }
         return currentVersoin
     }
-    increaseVerson() {
-        
+    increaseVerson(version) {
+        const versionArr = version.trim().split('.');
+        if (/\d+-(rc|alpha|beta)/.test(versionArr[2])) {
+            versionArr[3] = Number(versionArr[3]) + 1
+        } else {
+            versionArr[2] = Number(versionArr[2]) + 1
+        }
+        return versionArr.join(".")
     }
 
     editVerion(version) {
