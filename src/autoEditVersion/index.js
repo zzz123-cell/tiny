@@ -39,8 +39,6 @@ class EditVerion {
         const currentVersoin = await this.getCurrentVerson()
         const largeVersion = this.diffVersion(masterVersion, currentVersoin)
         const newVersion = this.increaseVerson(largeVersion)
-
-
         const answers = await  inquirer.prompt([
             {
               type: 'input',
@@ -55,11 +53,10 @@ class EditVerion {
             return  
         }
         
-        this.editVerion(answers.version)
+         await this.editVerion('1.0.0')
 
     }
     diffVersion(masterVersion, currentVersoin) {
-        console.log(masterVersion,currentVersoin)
         const result = compareVersions(masterVersion, currentVersoin);
         //1: masterVersion > currentVersoin
         //0: masterVersion === currentVersoin
