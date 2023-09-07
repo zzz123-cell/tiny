@@ -14,6 +14,7 @@ const fileName = 'package.json'
 const shell = require('shelljs')
 const inquirer = require('inquirer');
 const packagePath = path.join(process.cwd(), fileName);
+const  { compareVersions } = require("compare-versions")
 
 
 function shellExce(command) {
@@ -42,9 +43,7 @@ class EditVerion {
               default: `${masterVersion}`,      
             }
         ])
-
         const isValidate = this.checkVersion(answers.newVersion)
-        
         if (!isValidate) {
             this.stdIn()
             return  
@@ -52,8 +51,22 @@ class EditVerion {
         this.editVerion(answers.newVersion)
 
     }
+    diffVersion(masterVersion,currentVersoin) {
+        const result = compareVersions(masterVersion, currentVersoin);
+        //1: masterVersion > currentVersoin
+        //0: masterVersion === currentVersoin
+        if (result === 1 || result === 0) {
+            return masterVersion
+        }
+        return currentVersoin
+    }
+    increaseVerson() {
+        
+    }
+
     editVerion(version) {
         shellExce(`npm --no-git-tag-version version ${version}`)
+        shellExce(`git add package.json  package-lock.json && git commit -m 'ci(package.json package-lock.json): 更新项目版本号为：${version}`)
     }
     getLatest(){
         shellExce('git fetch origin')
@@ -92,11 +105,13 @@ class EditVerion {
         }
         return true
     }
+    async getCurrentVerson() {
+        const version = await this.readPackageVersion()
+        return version
+    }
     async gettMasterVersion() {
         this.checkUnCommitFile()
-
         const currentBaranch = await this.getCurrentBranchName()
-
         if (currentBaranch !== 'master') {
             shellExce('git checkout master');
         }
