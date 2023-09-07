@@ -81,7 +81,7 @@ class EditVerion {
         shellExce(`git add package.json  package-lock.json`)
         shellExce(`git commit -m "ci(package.json package-lock.json): 更新项目版本号为：${version}"`)
 
-        log.success(`版本更新成功，${version}: \n`)
+        log.success(`\n版本更新成功，${version}: \n`)
         this.stop()
     }
     getLatest(){
