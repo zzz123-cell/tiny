@@ -36,8 +36,8 @@ class EditVerion {
     async stdIn() {
         const masterVersion = await this.gettMasterVersion()
         const currentVersoin = this.getCurrentVerson()
-        const largeVersion = diffVersion(masterVersion, currentVersoin)
-        const newVersion = increaseVerson(largeVersion)
+        const largeVersion = this.diffVersion(masterVersion, currentVersoin)
+        const newVersion = this.increaseVerson(largeVersion)
 
 
         const answers = await  inquirer.prompt([
