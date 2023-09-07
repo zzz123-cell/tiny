@@ -1,6 +1,6 @@
 {
   "name": "@beisen/tiny",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "小工具集合",
   "main": "lib/index.js",
   "sideEffects": [
@@ -47,7 +47,14 @@
     "postcss-loader": "4.3.0",
     "react": "16.x.x",
     "react-dom": "16.x.x",
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.2",
+    "gulp": "^4.0.2",
+    "gulp-cli": "^2.3.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-sync": "^0.1.4",
+    "gulp-util": "^3.0.8",
+    "gulp-uglify": "3.0.2",
+    "del": "^3.0.0"
   },
   "dependencies": {
     "@beisen/vm": "1.0.4",
