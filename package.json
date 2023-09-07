@@ -49,18 +49,18 @@
     "typescript": "^4.4.2"
   },
   "dependencies": {
-    "@beisen/cmp-publish": "^2.0.0-alpha.1",
+    "@beisen/cmp-publish": "2.0.0-alpha.1",
     "@beisen/vm": "1.0.4",
-    "art-template": "^4.13.2",
-    "axios": "^1.5.0",
-    "cac": "^6.7.14",
-    "commander": "^11.0.0",
-    "compare-versions": "^6.1.0",
-    "cross-spawn": "^7.0.3",
-    "inquirer": "^8.2.6",
-    "shelljs": "^0.8.5",
-    "which-pm": "^2.1.1",
-    "which-pm-runs": "^1.1.0"
+    "art-template": "4.13.2",
+    "axios": "1.5.0",
+    "cac": "6.7.14",
+    "commander": "11.0.0",
+    "compare-versions": "6.1.0",
+    "cross-spawn": "7.0.3",
+    "inquirer": "8.2.6",
+    "shelljs": "0.8.5",
+    "which-pm": "2.1.1",
+    "which-pm-runs": "1.1.0"
   },
   "scene": "NPM",
   "peerDependencies": {
