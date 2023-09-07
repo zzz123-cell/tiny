@@ -39,13 +39,13 @@ class EditVerion {
         const currentVersoin = await this.getCurrentVerson()
         const largeVersion = this.diffVersion(masterVersion, currentVersoin)
         const newVersion = this.increaseVerson(largeVersion)
-        const orno = inquirer.prompt([
+        const check = inquirer.prompt([
             {
                 type: 'checkbox',
                 name: 'data',
                 message: `Master最新的版本为(${masterVersion}),当前分支版本:${currentVersoin}:`,
                 choices: [{
-                    name: `是否更新为${newVersion}`,
+                    name: `是否更新为: ${newVersion}`,
                     checked: true
               },{
                 name: `自定义`,
@@ -53,14 +53,15 @@ class EditVerion {
             }
         ])
 
-        if (orno.data) {
-            const isValidate = this.checkVersion(answers.version)
-            if (!isValidate) {
-                this.stdIn()
-                return  
-            } 
-            this.editVerion(newVersion)
-        }
+        console.log(check)
+        // if (orno.data) {
+        //     const isValidate = this.checkVersion(answers.version)
+        //     if (!isValidate) {
+        //         this.stdIn()
+        //         return  
+        //     } 
+        //     this.editVerion(newVersion)
+        // }
         
         
         
