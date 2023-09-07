@@ -38,7 +38,7 @@ class EditVerion {
             {
               type: 'input',
               name: 'newVersion',
-              message: `当前Master最新的版本为：${masterVersion}`,
+              message: `当前Master最新的版本为(${masterVersion})`,
               default: `${masterVersion}`,      
             }
         ])
@@ -52,8 +52,8 @@ class EditVerion {
         this.editVerion(answers.newVersion)
 
     }
-    editVerion(versionNew) {
-        shellExce('npm --no-git-tag-version version ${versionNew}')
+    editVerion(version) {
+        shellExce(`npm --no-git-tag-version version ${version}`)
     }
     getLatest(){
         shellExce('git fetch origin')
