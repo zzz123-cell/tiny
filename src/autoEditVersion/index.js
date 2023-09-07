@@ -115,7 +115,7 @@ class EditVerion {
     }
     async readPackageVersion() {
         const pck = this.readPackage()
-        return readPackage.version
+        return pck.version
     }
     async wirtePackageVersion(newVersion) {
         const pck = this.readPackage()
