@@ -59,6 +59,7 @@
         "cross-spawn": "^7.0.3",
         "inquirer": "^8.2.6",
         "shelljs": "^0.8.5",
+        "which-pm": "^2.1.1",
         "which-pm-runs": "^1.1.0"
     },
     "scene": "NPM",

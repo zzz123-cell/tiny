@@ -2,8 +2,11 @@ var commander = require('commander');
 var whistle = require('../src/whistle/index');
 var autoEditVersion = require('../src/autoEditVersion/index');
 const pkg = require("../package.json")
+const whichPMRuns = require('which-pm-runs')
 
 
+var a = whichPMRuns()
+console.log(process.env.npm_execpath)
 const service = new commander.Command('service').description('启动项目代理');
 
 

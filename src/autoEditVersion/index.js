@@ -14,7 +14,7 @@ const fileName = 'package.json'
 const shell = require('shelljs')
 const inquirer = require('inquirer');
 const packagePath = path.join(process.cwd(), fileName);
-const whichPMRuns = require('which-pm-runs') 
+const whichPM = require('which-pm')
 const  { compareVersions } = require("compare-versions")
 
 
@@ -58,7 +58,8 @@ class EditVerion {
         this.editVerion(answers.version)
 
     }
-    diffVersion(masterVersion,currentVersoin) {
+    diffVersion(masterVersion, currentVersoin) {
+        console.log(masterVersion,currentVersoin)
         const result = compareVersions(masterVersion, currentVersoin);
         //1: masterVersion > currentVersoin
         //0: masterVersion === currentVersoin
@@ -77,8 +78,9 @@ class EditVerion {
         return versionArr.join(".")
     }
     
-    editVerion(version) {
-        const usedPM = whichPMRuns()
+    async editVerion(version) {
+        console.log('11111')
+        const usedPM = await whichPM(process.cwd())
         console.log('usedPM',usedPM)
 // 对比想要使用的安装方式和正在用的安装方式是否一致，不一致给出警告并停止执行
         // if (usedPM && usedPM.name !== 'npm') {
@@ -90,8 +92,8 @@ class EditVerion {
         // if (usedPM && usedPM.name !== 'pnpm') {
             this.wirtePackageVersion(version)
         //}
-        shellExce(`git add package.json  package-lock.json`)
-        shellExce(`git commit -m "ci(package.json package-lock.json): 更新项目版本号为：${version}"`)
+        // shellExce(`git add package.json  package-lock.json`)
+        // shellExce(`git commit -m "ci(package.json package-lock.json): 更新项目版本号为：${version}"`)
 
         log.success(`\n版本更新成功，${version}: \n`)
         this.stop()
@@ -114,7 +116,7 @@ class EditVerion {
         return JSON.parse(bob)
     }
     async readPackageVersion() {
-        const pck = this.readPackage()
+        const pck = await this.readPackage()
         return pck.version
     }
     async wirtePackageVersion(newVersion) {
@@ -129,10 +131,10 @@ class EditVerion {
     checkUnCommitFile() {
         const outPut = shellExce('git status --porcelain');
         const changed = outPut.split('\n').filter(i => i).length;
-        if(changed > 0) {
-            log.error(`Error: 发现本地有未提交的代码,请提提交`)
-            this.stop()
-        }
+        // if(changed > 0) {
+        //     log.error(`Error: 发现本地有未提交的代码,请提提交`)
+        //     this.stop()
+        // }
     }
     // 检查版本是否符合规范
     checkVersion(version) {
