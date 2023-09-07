@@ -37,6 +37,11 @@ gulp.src('src/**/*.js')
     babel(
       {presets: ['@babel/env']}
     )
+  ).pipe(
+    uglify({
+      mangle: true,
+      compress: true
+    })
   ).pipe(gulp.dest('lib'))
 
 module.exports = gulp.series(clean,build)
