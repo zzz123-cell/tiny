@@ -1,6 +1,6 @@
 {
   "name": "@beisen/tiny",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "小工具集合",
   "main": "lib/index.js",
   "sideEffects": [
@@ -41,7 +41,6 @@
     "gulp-uglify": "3.0.2",
     "gulp-util": "^3.0.8",
     "husky": "^8.0.0",
-    "inquirer": "^9.2.10",
     "postcss": "8.4.18",
     "postcss-css-variables": "0.18.0",
     "postcss-flexbugs-fixes": "5.0.2",
@@ -58,6 +57,7 @@
     "commander": "11.0.0",
     "compare-versions": "6.1.0",
     "cross-spawn": "7.0.3",
+    "inquirer": "8.2.6",
     "shelljs": "0.8.5",
     "which-pm": "2.1.1"
   },

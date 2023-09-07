@@ -39,24 +39,27 @@ class EditVerion {
         const currentVersoin = await this.getCurrentVerson()
         const largeVersion = this.diffVersion(masterVersion, currentVersoin)
         const newVersion = this.increaseVerson(largeVersion)
-        const answers = await  inquirer.prompt([
+        inquirer.prompt([
             {
               type: 'input',
               name: 'version',
               message: `Master最新的版本为(${masterVersion}),当前分支版本:${currentVersoin}：`,
               default: `${newVersion}`,      
             }
-        ])
-        const isValidate = this.checkVersion(answers.version)
-        if (!isValidate) {
-            this.stdIn()
-            return  
-        }
+        ]).then((answers) => {
+            const isValidate = this.checkVersion(answers.version)
+            if (!isValidate) {
+                this.stdIn()
+                return  
+            }
+            
+            this.editVerion('1.0.0')
+        })
         
-         await this.editVerion('1.0.0')
 
     }
     diffVersion(masterVersion, currentVersoin) {
+
         const result = compareVersions(masterVersion, currentVersoin);
         //1: masterVersion > currentVersoin
         //0: masterVersion === currentVersoin
