@@ -139,37 +139,4 @@ class EditVerion {
 }
 
 
-
-
-// function checkoutClean() {
-//     const process = 
-//     return  new Promise(resolve => {
-//         process.stdout.on('data', data => {
-//             const name = data.toString().trim() 
-//             resolve(name)
-//         })
-//     })
-// }
-
-async function gettMasterVersion () {
-    spawn('git', ['checkout ','master']);
-    return  new Promise(resolve => {
-        process.stdout.on('data', data => {
-            const name = data.toString().trim() 
-            resolve(name)
-        })
-    },)
-  
-}
-
-// const  = spawn('git', ['rev-parse', '--short', 'HEAD']);
-// a.stdout.on('data', data => {
-
-// })
-
-//spawn('git', ['rev-parse', '--short', 'master'], { stdio: 'inherit' });
-
-
-
-
-new  EditVerion()
+module.exports =  EditVerion
