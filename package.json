@@ -16,7 +16,8 @@
         "example": "pnpm exec sbl start --port 9001",
         "prepublish": "pnpm run lib",
         "analysis": "analysis=on pnpm exec italent-thunder build prod",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "pub": "cmp-pub publish -r $INIT_CWD"
     },
     "license": "ISC",
     "repository": {
