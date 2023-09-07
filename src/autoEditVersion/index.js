@@ -44,7 +44,7 @@ class EditVerion {
             {
               type: 'input',
               name: 'version',
-              message: `Master最新的版本为(${masterVersion}),当前分支版本:${currentVersoin}`,
+              message: `Master最新的版本为(${masterVersion}),当前分支版本:${currentVersoin}：`,
               default: `${newVersion}`,      
             }
         ])
