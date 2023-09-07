@@ -77,7 +77,7 @@ class EditVerion {
     async gettMasterVersion() {
         this.checkUnCommitFile()
 
-        const currentBaranch = this.getCurrentBranchName()
+        const currentBaranch = await this.getCurrentBranchName()
         console.log(currentBaranch)
 
         if (currentBaranch !== 'master') {
