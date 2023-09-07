@@ -46,10 +46,11 @@
     "postcss-loader": "4.3.0",
     "react": "16.x.x",
     "react-dom": "16.x.x",
-    "typescript": "^4.4.2"
+    "typescript": "^4.4.2",
+    "@beisen/cmp-publish": "2.0.0-alpha.1"
   },
   "dependencies": {
-    "@beisen/cmp-publish": "2.0.0-alpha.1",
+    
     "@beisen/vm": "1.0.4",
     "art-template": "4.13.2",
     "axios": "1.5.0",
