@@ -81,8 +81,7 @@ class EditVerion {
         }
     }
     // 检查版本是否符合规范
-    checkVersion() {
-        const {version} = this.packageJson
+    checkVersion(version) {
         if(!version || (!version.match(/^\d+\.\d+\.\d+$/) && !version.match(/^\d+\.\d+\.\d+-(alpha|beta|rc)\.\d+$/))) {
             log.error('组件版本不符合规范,请参考 http://cmp-beisen.italent-inc.cn/docs?article=version-rule')
             return false
