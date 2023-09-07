@@ -38,12 +38,19 @@ class EditVerion {
             {
               type: 'input',
               name: 'newVersion',
-              message: `当前项目最新的版本为：${masterVersion}`,
+              message: `当前Master最新的版本为：${masterVersion}`,
               default: `${masterVersion}`,      
             }
         ])
-    }
 
+        const isValidate = this.checkVersion(answers.newVersion)
+        
+
+
+    }
+    editVerion(versionNew) {
+        shellExce('npm --no-git-tag-version version ${versionNew}')
+    }
     getLatest(){
         shellExce('git fetch origin')
     }
@@ -58,7 +65,6 @@ class EditVerion {
                 exit(0)
             }
         })
-        
         const bob = fs.readFileSync('./package.json')
         return JSON.parse(bob).version
     }
@@ -74,11 +80,19 @@ class EditVerion {
             this.stop()
         }
     }
+    // 检查版本是否符合规范
+    checkVersion() {
+        const {version} = this.packageJson
+        if(!version || (!version.match(/^\d+\.\d+\.\d+$/) && !version.match(/^\d+\.\d+\.\d+-(alpha|beta|rc)\.\d+$/))) {
+            log.error('组件版本不符合规范,请参考 http://cmp-beisen.italent-inc.cn/docs?article=version-rule')
+            return false
+        }
+        return true
+    }
     async gettMasterVersion() {
         this.checkUnCommitFile()
 
         const currentBaranch = await this.getCurrentBranchName()
-        console.log(currentBaranch)
 
         if (currentBaranch !== 'master') {
             shellExce('git checkout master');
