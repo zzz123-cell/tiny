@@ -7,7 +7,7 @@ const pkg = require("../package.json")
 const service = new commander.Command('service').description('启动项目代理');
 
 
-service.version(pkg.version,['-v, --version'])
+service.version(pkg.version,'-v, --version')
 service.command("proxy").description('启动项目代理')
     .action((name, options) => {
         whistle()
