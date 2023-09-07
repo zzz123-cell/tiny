@@ -14,6 +14,7 @@ const fileName = 'package.json'
 const shell = require('shelljs')
 const inquirer = require('inquirer');
 const packagePath = path.join(process.cwd(), fileName);
+const whichPMRuns = require('which-pm-runs') 
 const  { compareVersions } = require("compare-versions")
 
 
@@ -75,9 +76,20 @@ class EditVerion {
         }
         return versionArr.join(".")
     }
-
+    
     editVerion(version) {
-        shellExce(`npm --no-git-tag-version version ${version}`);
+        const usedPM = whichPMRuns()
+        console.log('usedPM',usedPM)
+// 对比想要使用的安装方式和正在用的安装方式是否一致，不一致给出警告并停止执行
+        // if (usedPM && usedPM.name !== 'npm') {
+        //     shellExce(`npm --no-git-tag-version version ${version}`);
+        // }
+        // if (usedPM && usedPM.name !== 'yarn') {
+        //     shellExce(`yarn version --no-git-tag-version  --new-version=${version}`);
+        // }
+        // if (usedPM && usedPM.name !== 'pnpm') {
+            this.wirtePackageVersion(version)
+        //}
         shellExce(`git add package.json  package-lock.json`)
         shellExce(`git commit -m "ci(package.json package-lock.json): 更新项目版本号为：${version}"`)
 
@@ -91,15 +103,24 @@ class EditVerion {
         process.exit(1)
     }
 
-    async readPackageVersion() {
+    async readPackage() {
         fs.stat(packagePath, (error, stat) => {
             if (error) { 
                 log.error(`${fileName}不存在`) 
                 exit(0)
             }
         })
-        const bob = fs.readFileSync('./package.json')
-        return JSON.parse(bob).version
+        const bob = fs.readFileSync(packagePath)
+        return JSON.parse(bob)
+    }
+    async readPackageVersion() {
+        const pck = this.readPackage()
+        return readPackage.version
+    }
+    async wirtePackageVersion(newVersion) {
+        const pck = this.readPackage()
+        pck[version] = newVersion;
+        await fs.writeFileSync(packagePath, JSON.stringify(pck, null, 2))
     }
     async getCurrentBranchName() {
         return shellExce('git branch --show-current');
