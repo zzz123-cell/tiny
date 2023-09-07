@@ -5,8 +5,13 @@ const log = {
     },
     error: (msg) => {
         console.log(chalk.red(msg))
-    }
-}
+    },
+    success:(msg) => {
+        console.log(chalk.green(msg))
+    },
+    warn:(msg) => {
+        console.yellow(chalk.green(msg))
+    },
 
 
 
