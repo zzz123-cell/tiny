@@ -39,34 +39,46 @@ class EditVerion {
         const currentVersoin = await this.getCurrentVerson()
         const largeVersion = this.diffVersion(masterVersion, currentVersoin)
         const newVersion = this.increaseVerson(largeVersion)
-        const check = inquirer.prompt([
+        const check = await inquirer.prompt([
             {
-                type: 'checkbox',
+                type: 'list',
                 name: 'data',
                 message: `Master最新的版本为(${masterVersion}),当前分支版本:${currentVersoin}:`,
                 choices: [{
                     name: `是否更新为: ${newVersion}`,
+                    value:"version",
                     checked: true
               },{
-                name: `自定义`,
+                    name: `自定义`,
+                    value: "custom",
                 }]
             }
         ])
 
-        console.log(check)
-        // if (orno.data) {
-        //     const isValidate = this.checkVersion(answers.version)
-        //     if (!isValidate) {
-        //         this.stdIn()
-        //         return  
-        //     } 
-        //     this.editVerion(newVersion)
-        // }
-        
-        
-        
-        
+        if (check.data === "version") {
+            await this.editVerion(newVersion)
+        }
+        if (check.data === "custom") {
+           
+            await this.customStdIn(newVersion)
+        }
 
+    }
+    async customStdIn(newVersion) {
+        const answers = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'version',
+                message:`请输入版本：`,
+                default:`${newVersion}`
+            }
+        ])
+        const isValidate = this.checkVersion(answers.version)
+        if (!isValidate) {
+            this.customStdIn()
+            return  
+        } 
+        await this.editVerion(answers.version)
     }
     diffVersion(masterVersion, currentVersoin) {
 
@@ -96,13 +108,13 @@ class EditVerion {
             updated = true
             shellExce(`npm --no-git-tag-version version ${version}`);
             shellExce(`git add package.json  package-lock.json`)
-            shellExce(`git commit -m "ci(package.json package-lock.json): 更新项目版本号为：${version}"`)
+            shellExce(`git commit -m "ci(package.json package-lock.json): 更新版本号为：${version}"`)
         }
         if (usedPM && usedPM.name !== 'yarn') {
             updated = true
             shellExce(`yarn version --no-git-tag-version  --new-version=${version}`);
             shellExce(`git add package.json  yarn-lock.json`)
-            shellExce(`git commit -m "ci(package.json yarn-lock.json): 更新项目版本号为：${version}"`)
+            shellExce(`git commit -m "ci(package.json yarn-lock.json): 更新版本号为：${version}"`)
         }
         if (usedPM && usedPM.name !== 'pnpm') {
             updated = true
