@@ -36,3 +36,4 @@ lib/
 
 cjs/
 .proxyConfig.js
+.proxy.whistle.js

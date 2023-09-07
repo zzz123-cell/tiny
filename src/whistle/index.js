@@ -1,4 +1,4 @@
-const fileName = 'proxy.whistle.js'
+const fileName = '.proxy.whistle.js'
 const fs = require('fs');
 const path = require('path')
 const cli = require('cac')()
@@ -6,6 +6,7 @@ const spawn = require("cross-spawn")
 const inquirer = require('inquirer');
 const template = require("art-template")
 const configSrc = path.join(process.cwd(), `./${fileName}`);
+
 
 
 function getProjectName() {
@@ -16,9 +17,18 @@ function addConfig() {
     spawn('w2', ['add','--force',configSrc ], { stdio: 'inherit' } );
 }
 
+function tempalte() {
+    const a = '`'
+    return `const pkg = require('./package.json');
+    exports.groupName = '项目开发环境'; // 可选，设置分组， 要求 Whistle 版本 >= v2.9.21
+    exports.name = "{{data.projectName}}";
+    exports.rules = ${a}/{{data.projectName}}/release/dist/app/i  https://127.0.0.1:{{data.port}}/app.js
+        /{{data.projectName}}/release/dist/css/main/i https://127.0.0.1:{{data.port}}/css/main.css
+        /{{data.projectName}}/release/dist/(.*)/ https://127.0.0.1:{{data.port}}/$1
+        ${a}`
+}
 function createConfig(port) {
-    const templatePath = path.join(__dirname, './template.art')
-    const html = template(templatePath, {
+    const html = template.render(tempalte(), {
         data: {
             projectName: getProjectName(),
             port: port || 3000,
