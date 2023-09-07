@@ -45,7 +45,9 @@ class EditVerion {
 
         const isValidate = this.checkVersion(answers.newVersion)
         
-
+        if (!isValidate) {
+            this.stdIn()
+        }
 
     }
     editVerion(versionNew) {
@@ -84,7 +86,9 @@ class EditVerion {
     checkVersion(version) {
         if(!version || (!version.match(/^\d+\.\d+\.\d+$/) && !version.match(/^\d+\.\d+\.\d+-(alpha|beta|rc)\.\d+$/))) {
             log.error('组件版本不符合规范,请参考 http://cmp-beisen.italent-inc.cn/docs?article=version-rule')
+            return false
         }
+        return true
     }
     async gettMasterVersion() {
         this.checkUnCommitFile()
