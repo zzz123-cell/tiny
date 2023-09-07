@@ -79,7 +79,7 @@ class EditVerion {
     editVerion(version) {
         shellExce(`npm --no-git-tag-version version ${version}`);
         shellExce(`git add package.json  package-lock.json`)
-        shellExce(`git commit -m ci(package.json package-lock.json): 更新项目版本号为：${version}`)
+        shellExce(`git commit -m "ci(package.json package-lock.json): 更新项目版本号为：${version}"`)
     }
     getLatest(){
         shellExce('git fetch origin')
