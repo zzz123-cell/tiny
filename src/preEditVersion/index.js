@@ -47,7 +47,9 @@ class EditVerion {
         
         if (!isValidate) {
             this.stdIn()
+            return  
         }
+        this.editVerion(answers.newVersion)
 
     }
     editVerion(versionNew) {
