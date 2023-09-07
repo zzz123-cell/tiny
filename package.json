@@ -32,6 +32,7 @@
     "@beisen-phoenix/demo-container": "^5.1.4",
     "@beisen/babel": "7.0.30",
     "@beisen/build": "2.0.35",
+    "@beisen/cmp-publish": "^1.1.2",
     "@beisen/italent-thunder": "2.0.29",
     "@beisen/storybook": "1.1.4-alpha.1",
     "@beisen/storybook-react": "4.x.x",
@@ -46,11 +47,9 @@
     "postcss-loader": "4.3.0",
     "react": "16.x.x",
     "react-dom": "16.x.x",
-    "typescript": "^4.4.2",
-    "@beisen/cmp-publish": "2.0.0-alpha.1"
+    "typescript": "^4.4.2"
   },
   "dependencies": {
-    
     "@beisen/vm": "1.0.4",
     "art-template": "4.13.2",
     "axios": "1.5.0",
@@ -61,7 +60,7 @@
     "inquirer": "8.2.6",
     "shelljs": "0.8.5",
     "which-pm": "2.1.1",
-    "which-pm-runs": "1.1.0"
+    "which-pm-runs": "1.1.2"
   },
   "scene": "NPM",
   "peerDependencies": {
