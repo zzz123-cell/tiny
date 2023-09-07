@@ -51,7 +51,10 @@ class EditVerion {
               },{
                     name: `自定义`,
                     value: "custom",
-                }]
+              },{
+                name: `不更新`,
+                value: "no",
+              }]
             }
         ])
 
@@ -59,8 +62,10 @@ class EditVerion {
             await this.editVerion(newVersion)
         }
         if (check.data === "custom") {
-           
             await this.customStdIn(newVersion)
+        } 
+        if (check.data === "no") {
+            this.stop()
         }
 
     }
