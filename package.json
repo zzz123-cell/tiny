@@ -47,6 +47,7 @@
         "@types/react-dom": "17.x.x"
     },
     "dependencies": {
+        "@beisen/cmp-publish": "^2.0.0-alpha.1",
         "@beisen/vm": "1.0.4",
         "art-template": "^4.13.2",
         "axios": "^1.5.0",
