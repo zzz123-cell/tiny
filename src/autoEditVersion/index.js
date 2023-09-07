@@ -79,24 +79,35 @@ class EditVerion {
     }
     
     async editVerion(version) {
-        console.log('11111')
         const usedPM = await whichPM(process.cwd())
-        console.log('usedPM',usedPM)
-// 对比想要使用的安装方式和正在用的安装方式是否一致，不一致给出警告并停止执行
-        // if (usedPM && usedPM.name !== 'npm') {
-        //     shellExce(`npm --no-git-tag-version version ${version}`);
-        // }
-        // if (usedPM && usedPM.name !== 'yarn') {
-        //     shellExce(`yarn version --no-git-tag-version  --new-version=${version}`);
-        // }
-        // if (usedPM && usedPM.name !== 'pnpm') {
-            this.wirtePackageVersion(version)
-        //}
-        // shellExce(`git add package.json  package-lock.json`)
-        // shellExce(`git commit -m "ci(package.json package-lock.json): 更新项目版本号为：${version}"`)
+        let updated = false
+        // 对比想要使用的安装方式和正在用的安装方式是否一致，不一致给出警告并停止执行
+        if (usedPM && usedPM.name !== 'npm') {
+            updated = true
+            shellExce(`npm --no-git-tag-version version ${version}`);
+            shellExce(`git add package.json  package-lock.json`)
+            shellExce(`git commit -m "ci(package.json package-lock.json): 更新项目版本号为：${version}"`)
+        }
+        if (usedPM && usedPM.name !== 'yarn') {
+            updated = true
+            shellExce(`yarn version --no-git-tag-version  --new-version=${version}`);
+            shellExce(`git add package.json  yarn-lock.json`)
+            shellExce(`git commit -m "ci(package.json yarn-lock.json): 更新项目版本号为：${version}"`)
+        }
+        if (usedPM && usedPM.name !== 'pnpm') {
+            updated = true
+            await this.wirtePackageVersion(version)
+            shellExce(`git add package.json`)
+            shellExce(`git commit -m "ci(package.json): 更新项目版本号为：${version}"`)
+        }
 
-        log.success(`\n版本更新成功，${version}: \n`)
+        if (updated) {
+            log.success(`\n版本更新成功，${version}: \n`)
+        } else {
+            log.error(`\n版本更新失败 \n`)
+        }
         this.stop()
+        
     }
     getLatest(){
         shellExce('git fetch origin')
@@ -122,7 +133,8 @@ class EditVerion {
     async wirtePackageVersion(newVersion) {
         const pck = await this.readPackage()
         pck['version'] = newVersion;
-        //await fs.writeFileSync(packagePath, JSON.stringify(pck, null, 2))
+    
+        await fs.writeFileSync(packagePath, JSON.stringify(pck, null, 2))
     }
     async getCurrentBranchName() {
         return shellExce('git branch --show-current');
@@ -131,10 +143,10 @@ class EditVerion {
     checkUnCommitFile() {
         const outPut = shellExce('git status --porcelain');
         const changed = outPut.split('\n').filter(i => i).length;
-        // if(changed > 0) {
-        //     log.error(`Error: 发现本地有未提交的代码,请提提交`)
-        //     this.stop()
-        // }
+        if(changed > 0) {
+            log.error(`Error: 发现本地有未提交的代码,请提提交`)
+            this.stop()
+        }
     }
     // 检查版本是否符合规范
     checkVersion(version) {
