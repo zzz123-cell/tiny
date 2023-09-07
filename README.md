@@ -2,12 +2,18 @@
 ### tiny autoVersion
 自动与Master版本对比，取最大版本，并自动更新版本
 
+安装husky,版本大于>8
+
+To add another hook use husky add. For example:
+
+```
+npx husky add .husky/post-commit 'exec < /dev/tty && npx tiny autoVersion'
+```
+
 ```
 {
-    "husky": {
-        "hooks": {
-            "post-commit": "tiny autoVersion",
-        }
+    "scripts": {
+        "prepare": "husky install",
     }
 }
 ```
