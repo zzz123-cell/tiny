@@ -9,16 +9,7 @@
     "*.less"
   ],
   "scripts": {
-    "preinstall": "npx only-allow npm",
-    "tsc": "pnpm exec tsc --noEmit",
-    "proxy": "pnpm exec italent-thunder start -o ${port=3001} --proxyVersion=${version=1.0.0} --disable-https={true}",
-    "build-prod": "pnpm exec italent-thunder build prod",
-    "lib": "pnpm exec stl build lib",
-    "example": "pnpm exec sbl start --port 9001",
-    "prepublish": "pnpm run lib",
-    "analysis": "analysis=on pnpm exec italent-thunder build prod",
-    "prepare": "husky install",
-    "pub": "cmp-pub publish -r $INIT_CWD"
+    "build-prod": "nnode ./gulpfile.js"
   },
   "license": "ISC",
   "repository": {

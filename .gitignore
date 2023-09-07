@@ -32,7 +32,6 @@ props-loader.ts
 
 /dist
 
-lib/
 
 cjs/
 .proxyConfig.js
