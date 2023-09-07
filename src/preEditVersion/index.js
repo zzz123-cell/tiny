@@ -78,6 +78,8 @@ class EditVerion {
         this.checkUnCommitFile()
 
         const currentBaranch = this.getCurrentBranchName()
+        console.log(currentBaranch)
+
         if (currentBaranch !== 'master') {
             shellExce('git checkout master');
         }
