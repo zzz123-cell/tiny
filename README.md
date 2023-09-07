@@ -1,24 +1,25 @@
-# 组件名称
 
-> 这里写你的组件名称
+### tiny autoVersion
+自动与Master版本对比，取最大版本，并自动更新版本
 
-## 概述
+```
+{
+    "husky": {
+        "hooks": {
+            "post-commit": "tiny autoVersion",
+        }
+    }
+}
+```
 
-> 这里是组件的相关描述
-> 
-> 这里是组件的相关描述
-> 
-> 这里是组件的相关描述
 
-> 这里是组件的相关描述
 
-## API
+## tiny proxy
+如果有proxy.whistle.js ，会在起动时，自动开开启代理
+如果没有roxy.whistle.js，会帮你创建
 
-| 参数 | 说明 | 类型 | 默认值 | 是否必传 |
-| --- | --- | --- | --- | --- |
-| type | 这里是参数说明 | string | 无 | 是 |
-| message | 这里是参数说明 | string | 无 | 是 |
-| description | 这里是参数说明 | string / JSX.Element | 无 | 否 |
-| closable | 这里是参数说明 | boolean | false |  否 |
-| onClose | 这里是参数说明 | ()=>{} | 无 |  否 | 
-| extraCls | 这里是参数说明 | string | 无 | 否 |
+```
+"scripts": {
+    "start": "tiny proxy && webpack-dev-server",
+}
+```
