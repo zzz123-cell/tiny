@@ -119,7 +119,7 @@ class EditVerion {
     }
     async wirtePackageVersion(newVersion) {
         const pck = await this.readPackage()
-        pck[version] = newVersion;
+        pck['version'] = newVersion;
         await fs.writeFileSync(packagePath, JSON.stringify(pck, null, 2))
     }
     async getCurrentBranchName() {
