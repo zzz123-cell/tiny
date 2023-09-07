@@ -44,7 +44,7 @@ class EditVerion {
             {
               type: 'input',
               name: 'version',
-              message: `当前最新的版本为(${largeVersion})`,
+              message: `Master最新的版本为(${masterVersion}),当前分支版本:${currentVersoin}`,
               default: `${newVersion}`,      
             }
         ])
@@ -77,7 +77,7 @@ class EditVerion {
     }
 
     editVerion(version) {
-        shellExce(`npm --no-git-tag-version version ${version}`)
+        shellExce(`npm --no-git-tag-version version ${version}`);
         shellExce(`git add package.json  package-lock.json && git commit -m 'ci(package.json package-lock.json): 更新项目版本号为：${version}`)
     }
     getLatest(){
