@@ -1,6 +1,6 @@
 {
   "name": "@beisen/tiny",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "小工具集合",
   "main": "lib/index.js",
   "sideEffects": [
@@ -9,8 +9,8 @@
     "*.less"
   ],
   "scripts": {
-    "build": "nnode ./gulpfile.js",
-    "build-prod": "nnode ./gulpfile.js"
+    "build": "node ./gulpfile.js",
+    "build-prod": "node ./gulpfile.js"
   },
   "license": "ISC",
   "repository": {
