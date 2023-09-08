@@ -109,19 +109,19 @@ class EditVerion {
         const usedPM = await whichPM(process.cwd())
         let updated = false
         // 对比想要使用的安装方式和正在用的安装方式是否一致，不一致给出警告并停止执行
-        if (usedPM && usedPM.name !== 'npm') {
+        if (usedPM && usedPM.name === 'npm') {
             updated = true
             shellExce(`npm --no-git-tag-version version ${version}`);
             shellExce(`git add package.json  package-lock.json`)
             shellExce(`git commit -m "ci(package.json package-lock.json): 更新版本号为：${version}"`)
         }
-        if (usedPM && usedPM.name !== 'yarn') {
+        if (usedPM && usedPM.name === 'yarn') {
             updated = true
             shellExce(`yarn version --no-git-tag-version  --new-version=${version}`);
             shellExce(`git add package.json  yarn-lock.json`)
             shellExce(`git commit -m "ci(package.json yarn-lock.json): 更新版本号为：${version}"`)
         }
-        if (usedPM && usedPM.name !== 'pnpm') {
+        if (usedPM && usedPM.name === 'pnpm') {
             updated = true
             await this.wirtePackageVersion(version)
             shellExce(`git add package.json`)
