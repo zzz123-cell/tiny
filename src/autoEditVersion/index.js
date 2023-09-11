@@ -170,10 +170,10 @@ class EditVerion {
     checkUnCommitFile() {
         const outPut = shellExce('git status --porcelain');
         const changed = outPut.split('\n').filter(i => i).length;
-        if(changed > 0) {
-            log.error(`Error: 发现本地有未提交的代码,请提提交`)
-            this.stop()
-        }
+        // if(changed > 0) {
+        //     log.error(`Error: 发现本地有未提交的代码,请提提交`)
+        //     this.stop()
+        // }
     }
     // 检查版本是否符合规范
     checkVersion(version) {
