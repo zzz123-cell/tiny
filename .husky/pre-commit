@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npx node  src/bin.js autoVersion
+exec < /dev/tty  && npx node  src/bin.js autoVersion
