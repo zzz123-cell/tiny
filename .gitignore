@@ -36,3 +36,4 @@ props-loader.ts
 cjs/
 .proxyConfig.js
 .proxy.whistle.js
+.beisen-tiny/

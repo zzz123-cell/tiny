@@ -5,7 +5,10 @@ const cli = require('cac')()
 const spawn = require("cross-spawn")
 const inquirer = require('inquirer');
 const template = require("art-template")
+const shell = require('shelljs')
 const configSrc = path.join(process.cwd(), `./${fileName}`);
+const { compareVersions } = require("compare-versions")
+const {log} = require("../utils");
 
 
 
@@ -13,8 +16,21 @@ function getProjectName() {
     const pPath = process.cwd();
     return pPath.substring(pPath.lastIndexOf(path.sep)+1)
 }
-function addConfig() {
-    spawn('w2', ['add','--force',configSrc ], { stdio: 'inherit' } );
+
+function openProxy() {
+    shell.exec(`w2 add --force ${configSrc}`, { silent: true }, function (code, stdout, stderr) { 
+        if (code !== 0) {
+            log.error(stdout.trim())
+        } else {
+            log.success(stdout.trim())
+        }
+    })
+}
+async function  addConfig() {
+    
+
+     openProxy()
+
 }
 
 function tempalte() {
@@ -22,25 +38,45 @@ function tempalte() {
     return `const pkg = require('./package.json');
     exports.groupName = '项目开发环境'; // 可选，设置分组， 要求 Whistle 版本 >= v2.9.21
     exports.name = "{{data.projectName}}";
-    exports.rules = ${a}/{{data.projectName}}/release/dist/app/i  https://127.0.0.1:{{data.port}}/app.js
-        /{{data.projectName}}/release/dist/css/main/i https://127.0.0.1:{{data.port}}/css/main.css
-        /{{data.projectName}}/release/dist/(.*)/ https://127.0.0.1:{{data.port}}/$1
-        ${a}`
+    exports.rules = ${a}/{{data.projectName}}/release/dist/(.*)(?:-).*(.bundle|.chunk)?(?:.min)(..*)$/  https://127.0.0.1:{{data.port}}/$1$3
+    /{{data.projectName}}/release/dist/(.*)(?:.min)(..*)$/  https://127.0.0.1:{{data.port}}/$1$2
+    /{{data.projectName}}/release/dist/images/(.*)/ https://127.0.0.1:{{data.port}}/images/$1
+    /{{data.projectName}}/release/dist/(.*)/ https://127.0.0.1:{{data.port}}/$1
+    ${a}
+   `
 }
-function createConfig(port) {
+async function createConfig(port) {
+   
+    let projectName = getProjectName();
+    if (projectName.slice(0, 3) == "ux-") {
+        const newProjectName = projectName.slice(3);
+        const answers = await inquirer.prompt([
+            {
+                type: 'confirm',
+                name: 'checked',
+              message: `资源路径中ux是否删除Y/N，删除后路径为：/ux/${newProjectName}/release/dist……`,
+              default: 'yes',      
+            }
+        ])
+        const { checked } = answers
+        if (checked) { 
+            projectName = newProjectName
+        }
+    }
     const html = template.render(tempalte(), {
         data: {
-            projectName: getProjectName(),
+            projectName: projectName,
             port: port || 3000,
         }
     })
 
     fs.writeFileSync(`${process.cwd()}/${fileName}`, html)
-    addConfig()
+    await addConfig()
 
 }
 
 async function createFile() {
+    await check()
     const answers = await  inquirer.prompt([
         {
           type: 'confirm',
@@ -60,9 +96,35 @@ async function createFile() {
           default: '3000',      
         }
     ])
-    createConfig(answersPort.port)
+    await createConfig(answersPort.port)
 }
 
+
+async  function check() {
+    let version = shell.exec(`w2 -V`, { silent: true }).stdout.trim()
+
+    if (!version) {
+        log.error(`未安装whistle，请先安装 http://wproxy.org/whistle/install.html`)
+    }
+    if (version && compareVersions(version, '2.9.21') < 0) { 
+        log.error('whistle 版本过低，请升级 whistle 到 2.9.21 以上')
+        const answers = await  inquirer.prompt([
+            {
+              type: 'confirm',
+              name: 'checked',
+              message: `whistle 版本过低，是否升级到最新版本`,
+              default: 'yes',      
+            }
+        ])
+        const { checked } = answers
+        if (checked) { 
+            version = '2.9.22'
+            const log1 = shell.exec(`npm i -g whistle && w2 restart`, { silent: true }).stdout.trim()
+            console.log(log1)
+        }
+
+    }
+}
 
 module.exports = function () {
     fs.stat(configSrc, (error, stat) => {
