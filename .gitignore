@@ -32,7 +32,6 @@ props-loader.ts
 
 /dist
 
-
 cjs/
 .proxyConfig.js
 .proxy.whistle.js
