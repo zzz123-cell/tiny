@@ -1,6 +1,6 @@
 {
   "name": "@beisen/tiny",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "小工具集合",
   "main": "lib/index.js",
   "sideEffects": [
@@ -10,7 +10,8 @@
   ],
   "scripts": {
     "build": "node ./gulpfile.js",
-    "build-prod": "node ./gulpfile.js"
+    "build-prod": "node ./gulpfile.js",
+    "pub": "cmp-pub publish -r $INIT_CWD"
   },
   "license": "ISC",
   "repository": {
@@ -24,6 +25,7 @@
     "@beisen-phoenix/demo-container": "^5.1.4",
     "@beisen/babel": "7.0.30",
     "@beisen/build": "2.0.35",
+    "@beisen/cmp-publish": "1.1.10",
     "@beisen/italent-thunder": "2.0.29",
     "@beisen/storybook": "1.1.4-alpha.1",
     "@beisen/storybook-react": "4.x.x",
