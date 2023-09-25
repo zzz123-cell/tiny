@@ -26,7 +26,7 @@
     "@beisen/babel": "7.0.30",
     "@beisen/build": "2.0.35",
     "@beisen/cmp-publish": "1.1.10",
-    "@beisen/italent-thunder": "2.0.29",
+    "@beisen/italent-thunder": "2.0.44",
     "@beisen/storybook": "1.1.4-alpha.1",
     "@beisen/storybook-react": "4.x.x",
     "@beisen/ts": "2.0.6",
