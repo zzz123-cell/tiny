@@ -39,9 +39,9 @@ function tempalte() {
     exports.groupName = '项目开发环境'; // 可选，设置分组， 要求 Whistle 版本 >= v2.9.21
     exports.name = "{{data.projectName}}";
     exports.rules = ${a}/{{data.projectName}}/release/dist/(.*)(?:-).*(.bundle|.chunk)?(?:.min)(..*)$/  https://127.0.0.1:{{data.port}}/$1$3
-    /{{data.projectName}}/release/dist/(.*)(?:.min)(..*)$/  https://127.0.0.1:{{data.port}}/$1$2
-    /{{data.projectName}}/release/dist/images/(.*)/ https://127.0.0.1:{{data.port}}/images/$1
-    /{{data.projectName}}/release/dist/(.*)/ https://127.0.0.1:{{data.port}}/$1
+/{{data.projectName}}/release/dist/(.*)(?:.min)(..*)$/  https://127.0.0.1:{{data.port}}/$1$2
+/{{data.projectName}}/release/dist/images/(.*)/ https://127.0.0.1:{{data.port}}/images/$1
+/{{data.projectName}}/release/dist/(.*)/ https://127.0.0.1:{{data.port}}/$1
     ${a}
    `
 }
