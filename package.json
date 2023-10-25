@@ -1,6 +1,6 @@
 {
   "name": "@beisen/tiny",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "小工具集合",
   "main": "lib/index.js",
   "sideEffects": [
@@ -22,7 +22,7 @@
     "tiny": "bin/index.js"
   },
   "devDependencies": {
-    "@beisen-phoenix/demo-container": "5.1.4",
+    "@beisen-phoenix/demo-container": "6.4.101",
     "@beisen/babel": "7.0.30",
     "@beisen/build": "2.0.35",
     "@beisen/cmp-publish": "1.1.10",
