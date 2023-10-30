@@ -11,7 +11,7 @@
   "scripts": {
     "build": "node ./gulpfile.js",
     "build-prod": "node ./gulpfile.js",
-    "pub": "cmp-pub publish -r $INIT_CWD",
+    "pub": "cmp-pub publish -r $INIT_CWD -p true",
     "tsc": "tsc --noEmit",
     "proxy": "italent-thunder start -o ${port} --proxyVersion=${version}"
   },
