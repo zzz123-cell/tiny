@@ -1,6 +1,6 @@
 {
   "name": "@beisen/tiny",
-  "version": "1.0.22-@alpha.2",
+  "version": "1.0.22-alpha.2",
   "description": "小工具集合",
   "main": "lib/index.js",
   "sideEffects": [
@@ -14,8 +14,8 @@
     "pub": "cmp-pub publish -r $INIT_CWD",
     "tsc": "tsc --noEmit",
     "proxy": "italent-thunder start -o ${port} --proxyVersion=${version}",
-    "lib": "pnpm exec mh lib",
-    "build:lib": "pnpm --filter ${cmp} run lib"
+    "lib": "stl build lib",
+    "prepublish": "npm run lib"
   },
   "license": "ISC",
   "repository": {
@@ -25,6 +25,7 @@
   "bin": {
     "tiny": "bin/index.js"
   },
+  "type": "module",
   "devDependencies": {
     "@beisen-phoenix/demo-container": "6.4.101",
     "@beisen/babel": "7.0.30",
