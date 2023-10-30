@@ -1,6 +1,6 @@
 {
   "name": "@beisen/tiny",
-  "version": "1.0.22",
+  "version": "1.0.22-alpha.1",
   "description": "小工具集合",
   "main": "lib/index.js",
   "sideEffects": [
@@ -11,7 +11,11 @@
   "scripts": {
     "build": "node ./gulpfile.js",
     "build-prod": "node ./gulpfile.js",
-    "pub": "cmp-pub publish -r $INIT_CWD"
+    "pub": "cmp-pub publish -r $INIT_CWD",
+    "tsc": "tsc --noEmit",
+    "proxy": "italent-thunder start -o ${port} --proxyVersion=${version}",
+    "lib": "stl build lib",
+    "prepublish": "npm run lib"
   },
   "license": "ISC",
   "repository": {
