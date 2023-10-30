@@ -22,7 +22,6 @@
     "tiny": "bin/index.js"
   },
   "devDependencies": {
-    "@beisen-phoenix/demo-container": "5.1.4",
     "@beisen/babel": "7.0.30",
     "@beisen/build": "2.0.35",
     "@beisen/cmp-publish": "1.1.10",
