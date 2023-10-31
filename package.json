@@ -1,6 +1,6 @@
 {
   "name": "@beisen/tiny",
-  "version": "1.0.25-alpha.2",
+  "version": "1.0.25-alpha.3",
   "description": "小工具集合",
   "main": "lib/index.js",
   "sideEffects": [

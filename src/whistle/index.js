@@ -24,7 +24,7 @@ console.log(
 // const port1 = webpackConfig.port
 // const projectName = path1.slice(path1.match(/ux/).index + 2, path1.length)
 // console.log('asjbjhbasd', path1, projectName, port1)
-a
+
 function getProjectNamePath() {
   //   const pPath = process.cwd()
   //   return pPath.substring(pPath.lastIndexOf(path.sep) + 1)
