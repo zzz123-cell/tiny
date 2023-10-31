@@ -24,8 +24,8 @@ console.log(
 // const port1 = webpackConfig.port
 // const projectName = path1.slice(path1.match(/ux/).index + 2, path1.length)
 // console.log('asjbjhbasd', path1, projectName, port1)
-
-function getProjectName() {
+a
+function getProjectNamePath() {
   //   const pPath = process.cwd()
   //   return pPath.substring(pPath.lastIndexOf(path.sep) + 1)
   const pPath = webpackConfig.output?.publicPath
@@ -62,10 +62,10 @@ function tempalte() {
   return `const pkg = require('./package.json');
     exports.groupName = '项目开发环境'; // 可选，设置分组， 要求 Whistle 版本 >= v2.9.21
     exports.name = "{{data.projectName}}";
-    exports.rules = ${a}{{data.projectName}}(.*)(?:-).*(.bundle|.chunk)?(?:.min)(..*)$/  127.0.0.1:{{data.port}}/$1$3
-{{data.projectName}}(.*)(?:.min)(..*)$/  127.0.0.1:{{data.port}}/$1$2
-{{data.projectName}}images/(.*)/ 127.0.0.1:{{data.port}}/images/$1
-{{data.projectName}}(.*)/ 127.0.0.1:{{data.port}}/$1
+    exports.rules = ${a}{{data.projectNamePath}}(.*)(?:-).*(.bundle|.chunk)?(?:.min)(..*)$/  127.0.0.1:{{data.port}}/$1$3
+{{data.projectNamePath}}(.*)(?:.min)(..*)$/  127.0.0.1:{{data.port}}/$1$2
+{{data.projectNamePath}}images/(.*)/ 127.0.0.1:{{data.port}}/images/$1
+{{data.projectNamePath}}(.*)/ 127.0.0.1:{{data.port}}/$1
     ${a}
    `
   //   return `const pkg = require('./package.json');
@@ -79,25 +79,32 @@ function tempalte() {
   //    `
 }
 async function createConfig(port) {
-  let projectName = getProjectName()
-  if (projectName.slice(0, 3) == 'ux-') {
-    const newProjectName = projectName.slice(3)
-    const answers = await inquirer.prompt([
-      {
-        type: 'confirm',
-        name: 'checked',
-        message: `资源路径中ux是否删除Y/N，删除后路径为：/ux/${newProjectName}/release/dist……`,
-        default: 'yes',
-      },
-    ])
-    const { checked } = answers
-    if (checked) {
-      projectName = newProjectName
-    }
-  }
+  //   if (projectName.slice(0, 3) == 'ux-') {
+  //     // const newProjectName = projectName.slice(3)
+  //     const newProjectName = projectNamePath.slice(1, projectNamePath.match(/release/).index - 1)
+  //     const answers = await inquirer.prompt([
+  //       {
+  //         type: 'confirm',
+  //         name: 'checked',
+  //         message: `资源路径中ux是否删除Y/N，删除后路径为：/ux/${newProjectName}/release/dist……`,
+  //         default: 'yes',
+  //       },
+  //     ])
+  //     const { checked } = answers
+  //     if (checked) {
+  //       projectName = newProjectName
+  //     }
+  //   }
+  let projectNamePath = getProjectNamePath()
+  const projectName = projectNamePath.slice(
+    1,
+    projectNamePath.match(/release/).index - 1
+  )
+
   const html = template.render(tempalte(), {
     data: {
       projectName: projectName,
+      projectNamePath: projectNamePath,
       port: port || 3000,
     },
   })
@@ -119,13 +126,13 @@ async function createFile() {
   const { type } = answers
   if (!type) return
 
-  const { port = 3000 } = webpackConfig
+  const { port } = webpackConfig
   const answersPort = await inquirer.prompt([
     {
       type: 'input',
       name: 'port',
-      message: `输入port，默认${port}`,
-      default: port,
+      message: `输入port，默认${port || 3000}`,
+      default: port || 3000,
     },
   ])
   await createConfig(answersPort.port)
