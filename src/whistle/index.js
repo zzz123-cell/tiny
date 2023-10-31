@@ -12,13 +12,6 @@ const webpackSrc = path.join(process.cwd(), `./${webpackConfigName}`)
 const webpackConfig = require(webpackSrc)
 const { compareVersions } = require('compare-versions')
 const { log } = require('../utils')
-console.log(
-  'pathpath',
-  process.cwd(),
-  path.sep,
-  'configSrcconfigSrc',
-  webpackSrc
-)
 
 // const path1 = webpackConfig.output.publicPath
 // const port1 = webpackConfig.port
@@ -126,13 +119,13 @@ async function createFile() {
   const { type } = answers
   if (!type) return
 
-  const { port } = webpackConfig
+  const { port = 3000 } = webpackConfig.devServer
   const answersPort = await inquirer.prompt([
     {
       type: 'input',
       name: 'port',
-      message: `输入port，默认${port || 3000}`,
-      default: port || 3000,
+      message: `输入port，默认${port}`,
+      default: port,
     },
   ])
   await createConfig(answersPort.port)
