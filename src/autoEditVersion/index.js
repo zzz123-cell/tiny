@@ -25,7 +25,7 @@ class EditVerion {
         this.run()
     }
     async run() {
-        const checkUnCommitFile
+        this.checkUnCommitFile()
         this.stdIn()
     }
 
@@ -144,7 +144,11 @@ class EditVerion {
     }
     checkUnCommitFile() {
         const outPut = shellExce('git status --porcelain');
-        const changed = outPut.split('\n').filter(i => i).length;
+        if (outPut) {
+            log.error('有未提交的文件')
+            this.stop()
+        }
+     
         // if(changed > 0) {
         //     log.error(`Error: 发现本地有未提交的代码,请提提交`)
         //     this.stop()
@@ -153,7 +157,7 @@ class EditVerion {
     // 检查版本是否符合规范
     checkVersion(version) {
         if(!version || (!version.match(/^\d+\.\d+\.\d+$/) && !version.match(/^\d+\.\d+\.\d+-(alpha|beta|rc)\.\d+$/))) {
-            log.error('组件版本不符合规范,请参考 http://cmp-beisen.italent-inc.cn/docs?article=version-rule')
+            log.error('组件版本不符合规范（示例：1.0.0、1.0.1-rc.1、1.0.1-alpha.1.0.1-beta.1)\n请参考 http://cmp-beisen.italent-inc.cn/docs?article=version-rule')
             return false
         }
         return true
