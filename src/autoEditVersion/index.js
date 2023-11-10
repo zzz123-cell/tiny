@@ -29,36 +29,23 @@ class EditVerion {
         this.run()
     }
     async run() {
-        const currentBaranchName = this.getCurrentBranchName()
         const currentBranchVersion = this.readPackageVersion()
         this.stdIn()
     }
  
     async stdIn() {
-        const masterVersion = await this.gettMasterVersion()
-        const currentVersoin = await this.getCurrentVerson()
-        const largeVersion = this.diffVersion(masterVersion, currentVersoin)
-        const newVersion = this.increaseVerson(largeVersion)
+        
+        const choices = await this.generateVersionSelectList()
         const check = await inquirer.prompt([
             {
                 type: 'list',
                 name: 'data',
-                message: `Master最新的版本为(${masterVersion}),当前分支版本:${currentVersoin}:`,
-                choices: [{
-                    name: `是否更新为: ${newVersion}`,
-                    value:"version",
-                    checked: true
-              },{
-                    name: `自定义`,
-                    value: "custom",
-              },{
-                name: `不更新`,
-                value: "no",
-              }]
+                message: `选择要更新到的版本`,
+                choices: choices
             }
         ])
-
-        if (check.data === "version") {
+        const newVersion = check.data;
+        if (check.data !== "custom" || check.data !== "no") {
             await this.editVerion(newVersion)
         }
         if (check.data === "custom") {
@@ -68,6 +55,31 @@ class EditVerion {
             this.stop()
         }
 
+    }
+    async generateVersionSelectList() { 
+        const remoteVersions = await this.getRemoteVersions()
+        let list = Object.keys(remoteVersions).map(key => {
+            const increaseVerson = this.increaseVerson(remoteVersions[key])
+            return {
+                name: `${key}: ${increaseVerson}`,
+                value: increaseVerson,
+                checked: false
+            }
+        })
+   
+        list.push({
+            name: `自定义`,
+            value: "custom",
+        }) 
+        list.push({
+            name: `跳过`,
+            value: "no",
+        })
+        return list
+    }
+    async editVerion(v) {
+        console.log('editVerion',v)
+        shellExce(`npm version ${v}`)
     }
     async customStdIn(newVersion) {
         const answers = await inquirer.prompt([
@@ -83,7 +95,7 @@ class EditVerion {
             this.customStdIn()
             return  
         } 
-        await this.editVerion(answers.version)
+        
     }
     diffVersion(masterVersion, currentVersoin) {
 
@@ -105,37 +117,7 @@ class EditVerion {
         return versionArr.join(".")
     }
     
-    async editVerion(version) {
-        const usedPM = await whichPM(process.cwd())
-        let updated = false
-        // 对比想要使用的安装方式和正在用的安装方式是否一致，不一致给出警告并停止执行
-        if (usedPM && usedPM.name === 'npm') {
-            updated = true
-            shellExce(`npm --no-git-tag-version version ${version}`);
-            shellExce(`git add package.json  package-lock.json`)
-            shellExce(`git commit -m "ci(package.json package-lock.json): 更新版本号为：${version}"`)
-        }
-        if (usedPM && usedPM.name === 'yarn') {
-            updated = true
-            shellExce(`yarn version --no-git-tag-version  --new-version=${version}`);
-            shellExce(`git add package.json  yarn-lock.json`)
-            shellExce(`git commit -m "ci(package.json yarn-lock.json): 更新版本号为：${version}"`)
-        }
-        if (usedPM && usedPM.name === 'pnpm') {
-            updated = true
-            await this.wirtePackageVersion(version)
-            shellExce(`git add package.json`)
-            shellExce(`git commit -m "ci(package.json): 更新项目版本号为：${version}"`)
-        }
-
-        if (updated) {
-            log.success(`\n版本更新成功，${version}: \n`)
-        } else {
-            log.error(`\n版本更新失败 \n`)
-        }
-        this.stop()
-        
-    }
+    
     getLatest(){
         shellExce('git fetch origin')
     }
@@ -187,18 +169,37 @@ class EditVerion {
         const version = await this.readPackageVersion()
         return version
     }
-    async gettMasterVersion() {
+    async getRemoteVersions() {
         this.checkUnCommitFile()
-        const currentBaranch = await this.getCurrentBranchName()
-        if (currentBaranch !== 'master') {
-            shellExce('git checkout master');
+        shellExce(`git fetch`)
+        
+        let allTags = shellExce(`git ls-remote --tags  --refs --sort=-taggerdate`)
+        allTags = allTags.slice(0,2000)
+        const allVersion = allTags.match(/\d+\.\d+\.\d+(\-(alpha|beta|rc)\.\d+)*/g)
+        const currentVersion = await this.getCurrentVerson()
+        allVersion.unshift(currentVersion)
+       
+        allVersion.sort(compareVersions)
+        let maxVersionMapping = {}
+
+        for (let i = 0; i < allVersion.length; i++) { 
+            const version = allVersion[i];
+            if (version.indexOf('-rc')>0) {
+                maxVersionMapping['rc'] = version
+            }else if (version.indexOf('-alpha')>0) {
+                maxVersionMapping['alpha'] = version
+            }else if (version.indexOf('-beta')>0) {
+                maxVersionMapping['beta'] = version
+            }else{
+                maxVersionMapping['normal'] = version
+            }
+            continue
         }
-        const version = await this.readPackageVersion()
-        shellExce(`git checkout ${currentBaranch}`);
-        return version
+       return maxVersionMapping 
     }
     
 }
 
+new EditVerion()
 
 module.exports =  EditVerion
