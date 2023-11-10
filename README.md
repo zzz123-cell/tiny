@@ -2,7 +2,7 @@
 ### tiny autoVersion
 自动与Master版本对比，取最大版本，并自动更新版本
 
-方法一：在pub前执行
+#### 方法一：在pub前执行
 
 ```
 "scripts": {
@@ -10,7 +10,7 @@
 }
 ```
 
-方法二：在pub前执行
+#### 方法二：在pub前执行
 
 ```
 "scripts": {
@@ -18,8 +18,25 @@
 }
 ```
 
-方法三：hooks 
-安装husky,版本大于>8
+#### 方法三：
+==注：使用hooks只能放在pre-push下面==
+① husky版本小于<8
+
+在 .huskyrc 文件填加 
+
+```
+{
+  "hooks": {
+    "pre-push":"exec < /dev/tty && tiny autoVersion"
+  }
+}
+
+```
+
+
+
+
+② husky版本大于>8
 To add another hook use husky add. For example:
 
 ```
@@ -29,7 +46,7 @@ npx husky add .husky/post-commit 'exec < /dev/tty && npx tiny autoVersion'
 ```
 {
     "scripts": {
-        "prepare": "husky install",
+        "pre-push": "husky install",
     }
 }
 ```

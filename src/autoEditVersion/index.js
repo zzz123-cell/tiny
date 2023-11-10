@@ -77,7 +77,9 @@ class EditVerion {
         const listChangeFile = shellExce(`git diff --name-only --diff-filter=ACMRTUB`)
         shellExce(`git add .`)
         shellExce(`git commit -n -m '更新项目版本号为：${v}\ncommit的文件如下：\n${listChangeFile}'`)
-        shellExce(`git push`)
+        shellExce(`git push --hook`)
+        log.success(`更新版本成功：${v}`)
+        this.stop()
         //git add package.json  package-lock.json && git commit -m 'ci(package.json package-lock.json): 更新项目版本号为：${versionNew}
     }
     async customStdIn(errorMsg) {
