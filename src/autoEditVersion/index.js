@@ -197,6 +197,4 @@ class EditVerion {
     
 }
 
-new EditVerion()
-
 module.exports =  EditVerion
