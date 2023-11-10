@@ -11,7 +11,7 @@
   "scripts": {
     "build": "node ./gulpfile.js",
     "build-prod": "node ./gulpfile.js",
-    "pub": "cmp-pub publish -r $INIT_CWD"
+    "pub": "tiny autoVersion && cmp-pub publish -r $INIT_CWD"
   },
   "license": "ISC",
   "repository": {
