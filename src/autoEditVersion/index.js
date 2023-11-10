@@ -4,8 +4,6 @@
  * 获取主分支的版本号 
  * 修改版本号
  */
-
-const spawn = require("cross-spawn")
 const fs = require("fs")
 const path = require("path");
 const { exit } = require("process");
@@ -14,7 +12,6 @@ const fileName = 'package.json'
 const shell = require('shelljs')
 const inquirer = require('inquirer');
 const packagePath = path.join(process.cwd(), fileName);
-const whichPM = require('which-pm')
 const  { compareVersions } = require("compare-versions")
 
 
@@ -34,7 +31,6 @@ class EditVerion {
     }
  
     async stdIn() {
-        
         const choices = await this.generateVersionSelectList()
         const check = await inquirer.prompt([
             {
@@ -45,11 +41,12 @@ class EditVerion {
             }
         ])
         const newVersion = check.data;
-        if (check.data !== "custom" || check.data !== "no") {
+        console.log(newVersion)
+        if (check.data !== "custom" && check.data !== "no") {
             await this.editVerion(newVersion)
         }
         if (check.data === "custom") {
-            await this.customStdIn(newVersion)
+            await this.customStdIn()
         } 
         if (check.data === "no") {
             this.stop()
@@ -78,16 +75,14 @@ class EditVerion {
         return list
     }
     async editVerion(v) {
-        console.log('editVerion',v)
-        shellExce(`npm version ${v}`)
+        shellExce(`npm version ${v} --no-git-tag-version`)
     }
-    async customStdIn(newVersion) {
+    async customStdIn(errorMsg) {
         const answers = await inquirer.prompt([
             {
                 type: 'input',
                 name: 'version',
-                message:`请输入版本：`,
-                default:`${newVersion}`
+                message: `请输入版本：`,
             }
         ])
         const isValidate = this.checkVersion(answers.version)
@@ -95,6 +90,7 @@ class EditVerion {
             this.customStdIn()
             return  
         } 
+        this.editVerion(answers.version)
         
     }
     diffVersion(masterVersion, currentVersoin) {
@@ -139,15 +135,9 @@ class EditVerion {
         const pck = await this.readPackage()
         return pck.version
     }
-    async wirtePackageVersion(newVersion) {
-        const pck = await this.readPackage()
-        pck['version'] = newVersion;
-    
-        await fs.writeFileSync(packagePath, JSON.stringify(pck, null, 2))
-    }
+
     async getCurrentBranchName() {
         return shellExce('git branch --show-current');
-        
     }
     checkUnCommitFile() {
         const outPut = shellExce('git status --porcelain');
@@ -171,7 +161,7 @@ class EditVerion {
     }
     async getRemoteVersions() {
         this.checkUnCommitFile()
-        shellExce(`git fetch`)
+        this.getLatest()
         
         let allTags = shellExce(`git ls-remote --tags  --refs --sort=-taggerdate`)
         allTags = allTags.slice(0,2000)
