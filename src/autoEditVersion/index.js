@@ -35,12 +35,11 @@ class EditVerion {
             {
                 type: 'list',
                 name: 'data',
-                message: `选择要更新到的版本`,
+                message: `选择要更新到的版本(非自定义的不需要手动修改版本号)`,
                 choices: choices
             }
         ])
         const newVersion = check.data;
-        console.log(newVersion)
         if (check.data !== "custom" && check.data !== "no") {
             await this.editVerion(newVersion)
         }
@@ -77,7 +76,7 @@ class EditVerion {
         shellExce(`npm version ${v} --no-git-tag-version`)
         const listChangeFile = shellExce(`git diff --name-only --diff-filter=ACMRTUB`)
         shellExce(`git add .`)
-        shellExce(`git commit -n -m '${listChangeFile}\n更新项目版本号为：${v}'`)
+        shellExce(`git commit -n -m '更新项目版本号为：${v}\ncommit的文件如下：\n${listChangeFile}'`)
         shellExce(`git push`)
         //git add package.json  package-lock.json && git commit -m 'ci(package.json package-lock.json): 更新项目版本号为：${versionNew}
     }
