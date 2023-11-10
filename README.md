@@ -40,16 +40,9 @@
 To add another hook use husky add. For example:
 
 ```
-npx husky add .husky/post-commit 'exec < /dev/tty && npx tiny autoVersion'
+npx husky add .husky/pre-push 'exec < /dev/tty && npx tiny autoVersion'
 ```
 
-```
-{
-    "scripts": {
-        "pre-push": "husky install",
-    }
-}
-```
 
 
 
