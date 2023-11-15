@@ -2,8 +2,10 @@ import React from 'react'
 
 type Props = {}
 
-export default function index({}: Props) {
-  return <div>index</div>
+export default function index({ }: Props) {
+  return (
+    <div>index</div>
+  )
 }
 
-//ci 1.0.24
+//ci 1.0.22

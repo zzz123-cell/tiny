@@ -4,8 +4,6 @@
  * 获取主分支的版本号 
  * 修改版本号
  */
-
-const spawn = require("cross-spawn")
 const fs = require("fs")
 const path = require("path");
 const { exit } = require("process");
@@ -14,7 +12,6 @@ const fileName = 'package.json'
 const shell = require('shelljs')
 const inquirer = require('inquirer');
 const packagePath = path.join(process.cwd(), fileName);
-const whichPM = require('which-pm')
 const  { compareVersions } = require("compare-versions")
 
 
@@ -25,57 +22,72 @@ function shellExce(command) {
 
 class EditVerion { 
     constructor() {
-        this.getLatest()
         this.run()
     }
     async run() {
-        const currentBaranchName = this.getCurrentBranchName()
-        const currentBranchVersion = this.readPackageVersion()
+        this.checkUnCommitFile()
         this.stdIn()
     }
- 
+
     async stdIn() {
-        const masterVersion = await this.gettMasterVersion()
-        const currentVersoin = await this.getCurrentVerson()
-        const largeVersion = this.diffVersion(masterVersion, currentVersoin)
-        const newVersion = this.increaseVerson(largeVersion)
+        const choices = await this.generateVersionSelectList()
         const check = await inquirer.prompt([
             {
                 type: 'list',
                 name: 'data',
-                message: `Master最新的版本为(${masterVersion}),当前分支版本:${currentVersoin}:`,
-                choices: [{
-                    name: `是否更新为: ${newVersion}`,
-                    value:"version",
-                    checked: true
-              },{
-                    name: `自定义`,
-                    value: "custom",
-              },{
-                name: `不更新`,
-                value: "no",
-              }]
+                message: `选择要更新到的版本(非自定义的不需要手动修改版本号)`,
+                choices: choices
             }
         ])
-
-        if (check.data === "version") {
+        const newVersion = check.data;
+        if (check.data !== "custom" && check.data !== "no") {
             await this.editVerion(newVersion)
         }
         if (check.data === "custom") {
-            await this.customStdIn(newVersion)
+            await this.customStdIn()
         } 
         if (check.data === "no") {
             this.stop()
         }
 
     }
-    async customStdIn(newVersion) {
+    async generateVersionSelectList() { 
+        const remoteVersions = await this.getRemoteVersions()
+        let list = Object.keys(remoteVersions).map(key => {
+            const increaseVerson = this.increaseVerson(remoteVersions[key])
+            return {
+                name: `${key}: ${increaseVerson}`,
+                value: increaseVerson,
+                checked: false
+            }
+        })
+   
+        list.push({
+            name: `自定义`,
+            value: "custom",
+        }) 
+        list.push({
+            name: `跳过`,
+            value: "no",
+        })
+        return list
+    }
+    async editVerion(v) {
+        shellExce(`npm version ${v} --no-git-tag-version`)
+        const listChangeFile = shellExce(`git diff --name-only --diff-filter=ACMRTUB`)
+        shellExce(`git add .`)
+        shellExce(`git commit -n -m '更新项目版本号为：${v}\ncommit的文件如下：\n${listChangeFile}'`)
+        shellExce(`git push --hook`)
+        log.success(`更新版本成功：${v}`)
+        this.stop()
+        //git add package.json  package-lock.json && git commit -m 'ci(package.json package-lock.json): 更新项目版本号为：${versionNew}
+    }
+    async customStdIn(errorMsg) {
         const answers = await inquirer.prompt([
             {
                 type: 'input',
                 name: 'version',
-                message:`请输入版本：`,
-                default:`${newVersion}`
+                message: `请输入版本：`,
             }
         ])
         const isValidate = this.checkVersion(answers.version)
@@ -83,7 +95,8 @@ class EditVerion {
             this.customStdIn()
             return  
         } 
-        await this.editVerion(answers.version)
+        this.editVerion(answers.version)
+        
     }
     diffVersion(masterVersion, currentVersoin) {
 
@@ -105,37 +118,7 @@ class EditVerion {
         return versionArr.join(".")
     }
     
-    async editVerion(version) {
-        const usedPM = await whichPM(process.cwd())
-        let updated = false
-        // 对比想要使用的安装方式和正在用的安装方式是否一致，不一致给出警告并停止执行
-        if (usedPM && usedPM.name === 'npm') {
-            updated = true
-            shellExce(`npm --no-git-tag-version version ${version}`);
-            shellExce(`git add package.json  package-lock.json`)
-            shellExce(`git commit -m "ci(package.json package-lock.json): 更新版本号为：${version}"`)
-        }
-        if (usedPM && usedPM.name === 'yarn') {
-            updated = true
-            shellExce(`yarn version --no-git-tag-version  --new-version=${version}`);
-            shellExce(`git add package.json  yarn-lock.json`)
-            shellExce(`git commit -m "ci(package.json yarn-lock.json): 更新版本号为：${version}"`)
-        }
-        if (usedPM && usedPM.name === 'pnpm') {
-            updated = true
-            await this.wirtePackageVersion(version)
-            shellExce(`git add package.json`)
-            shellExce(`git commit -m "ci(package.json): 更新项目版本号为：${version}"`)
-        }
-
-        if (updated) {
-            log.success(`\n版本更新成功，${version}: \n`)
-        } else {
-            log.error(`\n版本更新失败 \n`)
-        }
-        this.stop()
-        
-    }
+    
     getLatest(){
         shellExce('git fetch origin')
     }
@@ -157,19 +140,17 @@ class EditVerion {
         const pck = await this.readPackage()
         return pck.version
     }
-    async wirtePackageVersion(newVersion) {
-        const pck = await this.readPackage()
-        pck['version'] = newVersion;
-    
-        await fs.writeFileSync(packagePath, JSON.stringify(pck, null, 2))
-    }
+
     async getCurrentBranchName() {
         return shellExce('git branch --show-current');
-        
     }
     checkUnCommitFile() {
         const outPut = shellExce('git status --porcelain');
-        const changed = outPut.split('\n').filter(i => i).length;
+        if (outPut) {
+            log.error('有未提交的文件')
+            this.stop()
+        }
+     
         // if(changed > 0) {
         //     log.error(`Error: 发现本地有未提交的代码,请提提交`)
         //     this.stop()
@@ -178,7 +159,7 @@ class EditVerion {
     // 检查版本是否符合规范
     checkVersion(version) {
         if(!version || (!version.match(/^\d+\.\d+\.\d+$/) && !version.match(/^\d+\.\d+\.\d+-(alpha|beta|rc)\.\d+$/))) {
-            log.error('组件版本不符合规范,请参考 http://cmp-beisen.italent-inc.cn/docs?article=version-rule')
+            log.error('组件版本不符合规范（示例：1.0.0、1.0.1-rc.1、1.0.1-alpha.1.0.1-beta.1)\n请参考 http://cmp-beisen.italent-inc.cn/docs?article=version-rule')
             return false
         }
         return true
@@ -187,18 +168,35 @@ class EditVerion {
         const version = await this.readPackageVersion()
         return version
     }
-    async gettMasterVersion() {
+    async getRemoteVersions() {
         this.checkUnCommitFile()
-        const currentBaranch = await this.getCurrentBranchName()
-        if (currentBaranch !== 'master') {
-            shellExce('git checkout master');
+        this.getLatest()
+        
+        let allTags = shellExce(`git ls-remote --tags  --refs --sort=-taggerdate`)
+        allTags = allTags.slice(0,2000)
+        const allVersion = allTags.match(/\d+\.\d+\.\d+(\-(alpha|beta|rc)\.\d+)*/g)
+        const currentVersion = await this.getCurrentVerson()
+        allVersion.unshift(currentVersion)
+       
+        allVersion.sort(compareVersions)
+        let maxVersionMapping = {}
+
+        for (let i = 0; i < allVersion.length; i++) { 
+            const version = allVersion[i];
+            if (version.indexOf('-rc')>0) {
+                maxVersionMapping['rc'] = version
+            }else if (version.indexOf('-alpha')>0) {
+                maxVersionMapping['alpha'] = version
+            }else if (version.indexOf('-beta')>0) {
+                maxVersionMapping['beta'] = version
+            }else{
+                maxVersionMapping['normal'] = version
+            }
+            continue
         }
-        const version = await this.readPackageVersion()
-        shellExce(`git checkout ${currentBaranch}`);
-        return version
+       return maxVersionMapping 
     }
     
 }
-
 
 module.exports =  EditVerion
