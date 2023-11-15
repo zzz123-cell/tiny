@@ -13,14 +13,7 @@ const webpackConfig = require(webpackSrc)
 const { compareVersions } = require('compare-versions')
 const { log } = require('../utils')
 
-// const path1 = webpackConfig.output.publicPath
-// const port1 = webpackConfig.port
-// const projectName = path1.slice(path1.match(/ux/).index + 2, path1.length)
-// console.log('asjbjhbasd', path1, projectName, port1)
-
 function getProjectNamePath() {
-  //   const pPath = process.cwd()
-  //   return pPath.substring(pPath.lastIndexOf(path.sep) + 1)
   const pPath = webpackConfig.output?.publicPath
   if (pPath) {
     const projectNamePath = pPath.slice(
@@ -89,10 +82,8 @@ async function createConfig(port) {
   //     }
   //   }
   let projectNamePath = getProjectNamePath()
-  const projectName = projectNamePath.slice(
-    1,
-    projectNamePath.match(/release/).index - 1
-  )
+  
+  const projectName = projectNamePath.match(/\/([a-zA-Z0-9\-]+)\/.*/)[1]
 
   const html = template.render(tempalte(), {
     data: {
