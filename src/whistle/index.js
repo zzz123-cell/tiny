@@ -1,5 +1,4 @@
 const fileName = '.proxy.whistle.js'
-const webpackConfigName = 'webpack.config.js'
 const fs = require('fs')
 const path = require('path')
 const cli = require('cac')()
@@ -8,23 +7,9 @@ const inquirer = require('inquirer')
 const template = require('art-template')
 const shell = require('shelljs')
 const configSrc = path.join(process.cwd(), `./${fileName}`)
-const webpackSrc = path.join(process.cwd(), `./${webpackConfigName}`)
-const webpackConfig = require(webpackSrc)
 const { compareVersions } = require('compare-versions')
 const { log } = require('../utils')
-
-function getProjectNamePath() {
-  const pPath = webpackConfig.output?.publicPath
-  if (pPath) {
-    const projectNamePath = pPath.slice(
-      pPath.match(/ux/).index + 2,
-      pPath.length
-    )
-    return projectNamePath
-  } else {
-    log.error(`请检查webpack.config.js，找不到正确path`)
-  }
-}
+const getWebpackConfig = require('./webpackConfig')
 
 function openProxy() {
   shell.exec(`w2 add --force ${configSrc}`, { silent: true }, function(
@@ -64,7 +49,7 @@ function tempalte() {
   //     ${a}
   //    `
 }
-async function createConfig(port) {
+async function createConfig(projectNamePath, port) {
   //   if (projectName.slice(0, 3) == 'ux-') {
   //     // const newProjectName = projectName.slice(3)
   //     const newProjectName = projectNamePath.slice(1, projectNamePath.match(/release/).index - 1)
@@ -81,8 +66,6 @@ async function createConfig(port) {
   //       projectName = newProjectName
   //     }
   //   }
-  let projectNamePath = getProjectNamePath()
-  
   const projectName = projectNamePath.match(/\/([a-zA-Z0-9\-]+)\/.*/)[1]
 
   const html = template.render(tempalte(), {
@@ -97,7 +80,7 @@ async function createConfig(port) {
   await addConfig()
 }
 
-async function createFile() {
+async function createFile(webpackSrc) {
   await check()
   const answers = await inquirer.prompt([
     {
@@ -110,16 +93,61 @@ async function createFile() {
   const { type } = answers
   if (!type) return
 
-  const { port = 3000 } = webpackConfig.devServer
-  const answersPort = await inquirer.prompt([
+  if (webpackSrc) {
+    const { projectNamePath, port } = getWebpackConfig(webpackSrc)
+    await createConfig(projectNamePath, port)
+    return
+  }
+
+  const answersWebpack = await inquirer.prompt([
     {
-      type: 'input',
-      name: 'port',
-      message: `输入port，默认${port}`,
-      default: port,
+      type: 'confirm',
+      name: 'isWebpack',
+      message: '是否使用webpack配置',
+      default: 'yes',
     },
   ])
-  await createConfig(answersPort.port)
+
+  const { isWebpack } = answersWebpack
+
+  if (isWebpack) {
+    const defaultWebpackSrc = './webpack.config.js'
+    const answersWebpackSrc = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'webpackSrc',
+        message: `输入webpack配置路径，默认${defaultWebpackSrc}`,
+        default: defaultWebpackSrc,
+      },
+    ])
+    const { projectNamePath, port } = getWebpackConfig(
+      answersWebpackSrc.webpackSrc
+    )
+    await createConfig(projectNamePath, port)
+  } else {
+    const pPath = process.cwd()
+    const projectName = pPath.substring(pPath.lastIndexOf(path.sep) + 1)
+    const answersProjectName = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'projectName',
+        message: `输入项目名，默认${projectName}`,
+        default: projectName,
+      },
+    ])
+    const answersPort = await inquirer.prompt([
+      {
+        type: 'input',
+        name: 'port',
+        message: '输入port，默认3000',
+        default: 3000,
+      },
+    ])
+
+    const projectNamePath = `${answersProjectName.projectName}/release/dist/`
+
+    await createConfig(projectNamePath, answersPort.port)
+  }
 }
 
 async function check() {
@@ -149,10 +177,10 @@ async function check() {
   }
 }
 
-module.exports = function() {
+module.exports = function(webpackSrc) {
   fs.stat(configSrc, (error, stat) => {
     if (error) {
-      createFile()
+      createFile(webpackSrc)
       return
     }
     if (stat.isFile()) {
