@@ -39,7 +39,6 @@ class EditVerion {
                 choices: choices
             }
         ])
-        console.log(check)
         const newVersion = check.data;
         if (check.data !== "custom" && check.data !== "no") {
             await this.editVerion(newVersion)
@@ -176,8 +175,6 @@ class EditVerion {
         let allTags = shellExce(`git ls-remote --tags  --refs --sort=-taggerdate`)
         allTags = allTags.slice(0,2000)
         const allVersion = allTags.match(/\d+\.\d+\.\d+(\-(alpha|beta|rc)\.\d+)*/g)
-        const currentVersion = await this.getCurrentVerson()
-        allVersion.unshift(currentVersion)
        
         allVersion.sort(compareVersions)
         let maxVersionMapping = {}
