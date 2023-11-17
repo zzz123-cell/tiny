@@ -177,8 +177,8 @@ class EditVerion {
         const allVersion = allTags.match(/\d+\.\d+\.\d+(\-(alpha|beta|rc)\.\d+)*/g)
         const currentVersion = await this.getCurrentVerson()
         const isInRemote = allVersion.indexOf(currentVersion) > -1;
-        allVersion.unshift(currentVersion)
-       
+        console.log(isInRemote)
+
         allVersion.sort(compareVersions)
         let maxVersionMapping = {}
 
