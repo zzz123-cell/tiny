@@ -1,6 +1,6 @@
 {
   "name": "@beisen/tiny",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "description": "小工具集合",
   "main": "lib/index.js",
   "sideEffects": [
@@ -11,6 +11,10 @@
   "scripts": {
     "build": "node ./gulpfile.js",
     "build-prod": "node ./gulpfile.js",
+    "lib": "node ./gulpfile.js",
+    "pub": "cmp-pub publish -r $INIT_CWD -p true",
+    "tsc": "tsc --noEmit",
+    "proxy": "italent-thunder start -o ${port} --proxyVersion=${version}",
     "autoVersion": "node ./src/bin autoVersion"
   },
   "license": "ISC",
@@ -21,7 +25,9 @@
   "bin": {
     "tiny": "bin/index.js"
   },
+  "type": "commonjs",
   "devDependencies": {
+    "@beisen-phoenix/demo-container": "7.0.1",
     "@beisen/babel": "7.0.30",
     "@beisen/build": "2.0.35",
     "@beisen/cmp-publish": "1.1.10",
