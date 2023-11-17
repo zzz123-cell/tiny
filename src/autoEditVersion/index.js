@@ -39,6 +39,7 @@ class EditVerion {
                 choices: choices
             }
         ])
+        console.log(check)
         const newVersion = check.data;
         if (check.data !== "custom" && check.data !== "no") {
             await this.editVerion(newVersion)
@@ -176,35 +177,21 @@ class EditVerion {
         allTags = allTags.slice(0,2000)
         const allVersion = allTags.match(/\d+\.\d+\.\d+(\-(alpha|beta|rc)\.\d+)*/g)
         const currentVersion = await this.getCurrentVerson()
-        const isInRemote = allVersion.indexOf(currentVersion) > -1;
-        console.log(isInRemote)
-
+        allVersion.unshift(currentVersion)
+       
         allVersion.sort(compareVersions)
         let maxVersionMapping = {}
 
         for (let i = 0; i < allVersion.length; i++) { 
             const version = allVersion[i];
-            const currentIsMax = compareVersions(currentVersion, version)
             if (version.indexOf('-rc')>0) {
                 maxVersionMapping['rc'] = version
-                if (!isInRemote && allVersion.indexOf('-rc') > 0 && currentIsMax) {
-                    maxVersionMapping['rc'] = currentVersion
-                }
             }else if (version.indexOf('-alpha')>0) {
                 maxVersionMapping['alpha'] = version
-                if (!isInRemote && allVersion.indexOf('-alpha') > 0 && currentIsMax) {
-                    maxVersionMapping['alpha'] = currentVersion
-                }
             }else if (version.indexOf('-beta')>0) {
                 maxVersionMapping['beta'] = version
-                if (!isInRemote && allVersion.indexOf('-beta') > 0 && currentIsMax) {
-                    maxVersionMapping['beta'] = currentVersion
-                }
             }else{
                 maxVersionMapping['normal'] = version
-                if (!isInRemote && currentIsMax) {
-                    maxVersionMapping['normal'] = currentVersion
-                }
             }
             continue
         }
