@@ -175,7 +175,7 @@ class EditVerion {
         let allTags = shellExce(`git ls-remote --tags  --refs --sort=-taggerdate`)
         allTags = allTags.slice(0,2000)
         const allVersion = allTags.match(/\d+\.\d+\.\d+(\-(alpha|beta|rc)\.\d+)*/g)
-       
+        console.log(allVersion)
         allVersion.sort(compareVersions)
         let maxVersionMapping = {}
 
