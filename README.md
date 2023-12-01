@@ -1,4 +1,4 @@
-### tiny autoVersion
+# tiny autoVersion
 
 自动与 Master 版本对比，取最大版本，并自动版本+1
 
@@ -41,7 +41,7 @@ To add another hook use husky add. For example:
 npx husky add .husky/pre-push 'exec < /dev/tty && npx tiny autoVersion'
 ```
 
-## tiny proxy
+# tiny proxy
 
 如果有 proxy.whistle.js ，会在起动时，自动开开启代理
 如果没有 proxy.whistle.js，会帮你创建，默认生成一个符合扩展项目的代理规则
