@@ -144,7 +144,7 @@ async function createFile(webpackSrc) {
       },
     ])
 
-    const projectNamePath = `ux/${answersProjectName.projectName}/release/dist/`
+    const projectNamePath = `/ux/${answersProjectName.projectName}/release/dist/`
 
     await createConfig(projectNamePath, answersPort.port)
   }
