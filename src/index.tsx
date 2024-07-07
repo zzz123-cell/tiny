@@ -8,4 +8,4 @@ export default function index({ }: Props) {
   )
 }
 
-//ci 1.0.22
+//ci 1.0.22 小工具
